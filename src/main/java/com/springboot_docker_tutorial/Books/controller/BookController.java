@@ -34,17 +34,17 @@ public class BookController {
 
     }
 
-    @GetMapping(path = "/books/{isbn}")
-    public ResponseEntity<Book> retrieveBook(@PathVariable("id") String isbn){
-        final Optional<Book> foundBook = bookService.findById(isbn);
-        return  foundBook.map(
-                book -> new ResponseEntity<Book>(book,HttpStatus.OK)
-        ).orElse(new ResponseEntity<Book>(HttpStatus.NOT_FOUND));
-        
-    }
+        @GetMapping(path = "/books/{isbn}")
+        public ResponseEntity<Book> retrieveBook(@PathVariable("isbn") String isbn){
+            final Optional<Book> foundBook = bookService.findById(isbn);
+            return  foundBook.map(
+                    book -> new ResponseEntity<Book>(book,HttpStatus.OK)
+            ).orElse(new ResponseEntity<Book>(HttpStatus.NOT_FOUND));
+
+        }
 
     @GetMapping(path = "/books")
-    public ResponseEntity<List<Book>> retrieveAllBooks(@PathVariable("id") String isbn){
+    public ResponseEntity<List<Book>> retrieveAllBooks(){
         return new ResponseEntity<List<Book>>(bookService.listBook(),HttpStatus.OK);
     }
 
