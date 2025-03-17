@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -40,6 +41,17 @@ public class BookController {
                 book -> new ResponseEntity<Book>(book,HttpStatus.OK)
         ).orElse(new ResponseEntity<Book>(HttpStatus.NOT_FOUND));
         
+    }
+
+    @GetMapping(path = "/books")
+    public ResponseEntity<List<Book>> retrieveAllBooks(@PathVariable("id") String isbn){
+        return new ResponseEntity<List<Book>>(bookService.listBook(),HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/books/{isbn}")
+    ResponseEntity deleteBook(@PathVariable("id") String isbn){
+        bookService.deleteBookById(isbn);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 

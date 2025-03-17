@@ -4,12 +4,18 @@ import com.springboot_docker_tutorial.Books.domain.Book;
 import com.springboot_docker_tutorial.Books.domain.BookEntity;
 import com.springboot_docker_tutorial.Books.repositories.BookRepository;
 import com.springboot_docker_tutorial.Books.service.BookService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
+@Slf4j
+
 public class BookServiceImpl implements BookService {
 
     private BookRepository repository;
@@ -36,6 +42,23 @@ public class BookServiceImpl implements BookService {
 
         final Optional<BookEntity> foundBook = repository.findById(isbn);
         return foundBook.map(book -> bookEntityToBook(book));
+    }
+
+    @Override
+    public void deleteBookById(String isbn) {
+        try {
+            repository.deleteById(isbn);
+        }catch (final EmptyResultDataAccessException ex){
+            log.debug("Attempted to delete non-existing book",ex);
+        }
+    }
+
+    @Override
+    public List<Book> listBook() {
+     final List<BookEntity> foundBook = repository.findAll();
+     return foundBook.stream()
+             .map(this::bookEntityToBook)
+             .collect(Collectors.toList());
     }
 
 
